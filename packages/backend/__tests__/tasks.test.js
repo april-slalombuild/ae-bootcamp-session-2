@@ -41,8 +41,32 @@ describe('tasksValidation', () => {
       expect(validateForUpdate({ title: '' })).toHaveProperty('title');
     });
 
+    it('rejects a title longer than 200 characters', () => {
+      expect(validateForUpdate({ title: 'x'.repeat(201) })).toHaveProperty('title');
+    });
+
+    it('rejects a non-string description', () => {
+      expect(validateForUpdate({ description: 123 })).toHaveProperty('description');
+    });
+
+    it('rejects a description longer than 1000 characters', () => {
+      expect(validateForUpdate({ description: 'x'.repeat(1001) })).toHaveProperty('description');
+    });
+
+    it('rejects an invalid due date string', () => {
+      expect(validateForUpdate({ dueDate: 'not-a-date' })).toHaveProperty('dueDate');
+    });
+
+    it('rejects an invalid priority', () => {
+      expect(validateForUpdate({ priority: 'urgent' })).toHaveProperty('priority');
+    });
+
     it('rejects non-boolean completed', () => {
       expect(validateForUpdate({ completed: 'yes' })).toHaveProperty('completed');
+    });
+
+    it('rejects a missing body', () => {
+      expect(validateForUpdate(null)).toHaveProperty('_');
     });
 
     it('returns null for valid partial update', () => {
@@ -124,6 +148,78 @@ describe('tasksRepo', () => {
     it('default sort puts incomplete tasks first', () => {
       const result = repo.list(db);
       expect(result[result.length - 1].completed).toBe(true);
+    });
+
+    it('sorts by priority high → low', () => {
+      const result = repo.list(db, { sort: 'priority', order: 'asc' });
+      expect(result.map((t) => t.priority)).toEqual(['high', 'medium', 'low']);
+    });
+
+    it('sorts by due date ascending with nulls last', () => {
+      const result = repo.list(db, { sort: 'due', order: 'asc' });
+      expect(result.map((t) => t.dueDate)).toEqual([
+        '2026-01-01',
+        '2026-12-01',
+        null,
+      ]);
+    });
+  });
+
+  describe('update with all field types', () => {
+    it('patches description, due date, and priority independently', () => {
+      const created = repo.create(db, { title: 'Initial' });
+      const updated = repo.update(db, created.id, {
+        description: 'Now described',
+        dueDate: '2026-06-15',
+        priority: 'high',
+      });
+      expect(updated.description).toBe('Now described');
+      expect(updated.dueDate).toBe('2026-06-15');
+      expect(updated.priority).toBe('high');
+    });
+
+    it('returns the existing task unchanged when patch is empty', () => {
+      const created = repo.create(db, { title: 'Stable' });
+      const updated = repo.update(db, created.id, {});
+      expect(updated).toEqual(created);
+    });
+  });
+
+  describe('due date filters', () => {
+    let todayId;
+    let overdueId;
+    let weekId;
+    let farId;
+
+    beforeEach(() => {
+      const fmt = (offset) => {
+        const d = new Date();
+        d.setDate(d.getDate() + offset);
+        return d.toISOString().slice(0, 10);
+      };
+      todayId = repo.create(db, { title: 'Today task', dueDate: fmt(0) }).id;
+      overdueId = repo.create(db, { title: 'Overdue task', dueDate: fmt(-3) }).id;
+      weekId = repo.create(db, { title: 'This week', dueDate: fmt(3) }).id;
+      farId = repo.create(db, { title: 'Far future', dueDate: fmt(60) }).id;
+    });
+
+    it('filters due=today', () => {
+      const ids = repo.list(db, { due: 'today' }).map((t) => t.id);
+      expect(ids).toEqual([todayId]);
+    });
+
+    it('filters due=overdue and excludes completed', () => {
+      const ids = repo.list(db, { due: 'overdue' }).map((t) => t.id);
+      expect(ids).toEqual([overdueId]);
+
+      repo.update(db, overdueId, { completed: true });
+      expect(repo.list(db, { due: 'overdue' })).toHaveLength(0);
+    });
+
+    it('filters due=week to next 7 days', () => {
+      const ids = repo.list(db, { due: 'week' }).map((t) => t.id).sort();
+      expect(ids).toEqual([todayId, weekId].sort());
+      expect(ids).not.toContain(farId);
     });
   });
 });

@@ -7,6 +7,7 @@ const BASE_URL = process.env.BASE_URL || `http://localhost:${FRONTEND_PORT}`;
 
 module.exports = defineConfig({
   testDir: './tests/e2e',
+  testMatch: /.*\.spec\.js$/,
   timeout: 30_000,
   fullyParallel: false,
   retries: process.env.CI ? 1 : 0,
@@ -23,7 +24,7 @@ module.exports = defineConfig({
   ],
   webServer: [
     {
-      command: 'npm --workspace=backend run start',
+      command: 'cd packages/backend && npm start',
       url: `http://localhost:${BACKEND_PORT}/healthz`,
       reuseExistingServer: !process.env.CI,
       timeout: 60_000,
@@ -33,7 +34,7 @@ module.exports = defineConfig({
       },
     },
     {
-      command: 'npm --workspace=frontend run start',
+      command: 'cd packages/frontend && npm start',
       url: BASE_URL,
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
