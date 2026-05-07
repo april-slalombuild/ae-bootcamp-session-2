@@ -1,3 +1,122 @@
+/* M3-inspired design tokens. Sage primary, Clay tertiary, neutral surfaces. */
+
+:root {
+  color-scheme: light dark;
+
+  /* Color — Light theme */
+  --md-primary: #4f7a5a;
+  --md-on-primary: #ffffff;
+  --md-primary-container: #d3ecd8;
+  --md-on-primary-container: #0e2517;
+  --md-secondary: #4f655a;
+  --md-tertiary: #c97b5a;
+  --md-on-tertiary: #ffffff;
+  --md-tertiary-container: #ffdbcc;
+
+  --md-error: #b3261e;
+  --md-on-error: #ffffff;
+  --md-error-container: #f9dedc;
+  --md-on-error-container: #410e0b;
+
+  --md-success: #3f8c5c;
+  --md-warning: #c58a1f;
+
+  --md-surface: #fbfaf6;
+  --md-surface-container: #f0eee8;
+  --md-surface-container-high: #e7e4dd;
+  --md-on-surface: #1c1c19;
+  --md-on-surface-variant: #44483f;
+  --md-outline: #74796f;
+  --md-outline-variant: #c4c8bd;
+
+  /* Typography */
+  --font-family-base: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Spacing — 4px base */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+
+  /* Elevation */
+  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.08);
+  --elevation-3: 0 4px 8px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  /* Motion */
+  --motion-short: 100ms;
+  --motion-medium: 300ms;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --md-primary: #b1d3b6;
+    --md-on-primary: #1e3a25;
+    --md-primary-container: #335a3a;
+    --md-on-primary-container: #cdebd2;
+    --md-secondary: #b6ccba;
+    --md-tertiary: #ffb59a;
+    --md-on-tertiary: #5b1e0a;
+    --md-tertiary-container: #7a3a23;
+
+    --md-error: #f2b8b5;
+    --md-on-error: #601410;
+    --md-error-container: #8c1d18;
+    --md-on-error-container: #f9dedc;
+
+    --md-surface: #131410;
+    --md-surface-container: #1e1f1b;
+    --md-surface-container-high: #2a2b27;
+    --md-on-surface: #e3e3de;
+    --md-on-surface-variant: #c4c8bd;
+    --md-outline: #8e9389;
+    --md-outline-variant: #44483f;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-short: 0ms;
+    --motion-medium: 0ms;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--md-surface);
+  color: var(--md-on-surface);
+  font-family: var(--font-family-base);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--md-tertiary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

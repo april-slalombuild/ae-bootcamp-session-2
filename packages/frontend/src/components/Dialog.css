@@ -1,0 +1,132 @@
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  z-index: 100;
+  animation: fade-in var(--motion-medium) var(--easing-standard);
+}
+
+.dialog {
+  background: var(--md-surface-container);
+  color: var(--md-on-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-3);
+  padding: var(--space-6);
+  width: 100%;
+  max-width: 480px;
+  max-height: calc(100vh - var(--space-8));
+  overflow-y: auto;
+}
+
+.dialog__title {
+  margin: 0 0 var(--space-4);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.dialog__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.field__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--md-on-surface-variant);
+}
+
+.field__input,
+.field__textarea,
+.field__select {
+  padding: var(--space-3);
+  border: 1px solid var(--md-outline);
+  background: var(--md-surface);
+  color: var(--md-on-surface);
+  border-radius: var(--radius-sm);
+  min-height: 48px;
+}
+
+.field__textarea {
+  min-height: 80px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.field__error {
+  color: var(--md-error);
+  font-size: 13px;
+}
+
+.dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.btn {
+  min-height: 48px;
+  padding: var(--space-2) var(--space-6);
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: filter var(--motion-short) var(--easing-standard);
+}
+
+.btn:hover {
+  filter: brightness(1.05);
+}
+
+.btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.btn--filled {
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+}
+
+.btn--outlined {
+  background: transparent;
+  color: var(--md-primary);
+  border: 1px solid var(--md-outline);
+}
+
+.btn--text {
+  background: transparent;
+  color: var(--md-primary);
+  padding: var(--space-2) var(--space-3);
+}
+
+.btn--danger {
+  background: var(--md-error);
+  color: var(--md-on-error);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog-backdrop {
+    animation: none;
+  }
+}
