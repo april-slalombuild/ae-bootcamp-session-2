@@ -44,7 +44,7 @@ function list(db, filters = {}) {
   }
 
   if (filters.q) {
-    where.push('(LOWER(title) LIKE @q OR LOWER(IFNULL(description, "")) LIKE @q)');
+    where.push("(LOWER(title) LIKE @q OR LOWER(IFNULL(description, '')) LIKE @q)");
     params.q = `%${filters.q.toLowerCase()}%`;
   }
 
